@@ -19,5 +19,5 @@ I appeared that Moo is also known as 'Bulls and Cows', and is the forerunner of 
 * Bulls: the number of correct digits in the right place.
 * Cows:  the number of correct digits in the wrong place.
 
-E.g. if 5846 is the secret code, then a guess of 3456 is 1 bull (the 6) and 2 cows (the 4 and 5). 
+E.g. if 5846 is the secret code, then a guess of 3456 is one bull (the 6) and two cows (the 4 and 5). 
 
