@@ -16,7 +16,7 @@ The programmer of this game, Ken Thompson, is also the author of the UNIX Operat
 
 I appeared that Moo is also known as 'Bulls and Cows', and is the forerunner of MasterMind, which I did know. In a pencil-and-paper version it has been played by schoolchildren in Britain for decades. The rules are simple:
 Guess the 4-digit code, of which all digits must be distinct.
-    Bulls: the number of correct digits in the right place.
-    Cows:  the number of correct digits in the wrong place.
+* Bulls: the number of correct digits in the right place.
+* Cows:  the number of correct digits in the wrong place.
 E.g. if 5846 is the secret code, then a guess of 3456 is 1 bull (the 6) and 2 cows (the 4 and 5). 
 
