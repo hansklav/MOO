@@ -23,6 +23,13 @@ I appeared that Moo is also known as ‘Bulls and Cows’, and is the forerunner
 
 E.g. if 5046 is the secret code, then a guess of 3456 is one bull (the 6) and two cows (the 4 and 5). The purpose of the game is to get ‘four bulls’ (code correctly guessed) in as few tries as possible. 
 
-The first computer implementation of Bulls and Cows was the MOO program written in 1968 by Dr. Frank King for [TITAN](https://en.wikipedia.org/wiki/Titan_(1963_computer)), the Cambridge University Atlas&nbsp;2 computer; this program kept a league table showing the performance of its human opponents, which made it hugely successful in the Computer Laboratory.
+The first computer implementation of Bulls and Cows was the MOO program written in 1968 by Dr. Frank King for [TITAN](https://en.wikipedia.org/wiki/Titan_(1963_computer)), the Cambridge University Atlas&nbsp;2 computer; this program kept a league table showing the performance of its human opponents, which made it very popular in the Computer Laboratory.
 
-Several years later it was ‘imported from England’ into the USA when J.S. Felton wrote a version for the TSS/8 time sharing system of DEC's PDP-8, and Jerrold Grochow did so for the Multics system at MIT in 1970. The game was introduced to a wider audience by ‘Aleph0’ in the Computer Recreations column of the April-June 1971 issue of Software–Practice and Experience.
+Around 1970 it was ‘imported from England’ into the USA when J.S. Felton wrote a version for the TSS/8 time sharing system of DEC's PDP-8, Jerrold Grochow did so [in PL/1](https://web.archive.org/web/20161114010351/http://ftp.stratus.com/vos/multics/pg/pg.html) for the Multics system at MIT, and Guy L. Steele wrote a [BASIC program](https://archive.org/details/h42_DECUS_8-394/page/n3/mode/2up) in DEC's DECUS Program Library for the PDP-10 and -11. 
+
+The game was introduced to a wider audience by ‘Aleph0’ in the Computer Recreations column of the April-June 1971 issue of Software–Practice and Experience.
+
+The optimal playing strategy is discussed [here](the optimal playing stategy see:
+	https://web.archive.org/web/20120425120039/http://www.jfwaf.com/Bulls%20and%20Cows.pdf
+).
+
