@@ -1,7 +1,7 @@
 # MOO
 The game of MOO.
 
-While glancing through the First Edition UNIX Programmer's Manual (1971) I was struck by the following page in Section VI ('User-maintained programs'): 
+While glancing through the (First Edition UNIX Programmer's Manual)[https://web.archive.org/web/20060302222731/http://www.cs.bell-labs.com:80/who/dmr/1stEdman.html] (1971) I was struck by the following page in (Section VI)[https://web.archive.org/web/20060314024422/http://cm.bell-labs.com/cm/cs/who/dmr/man61.pdf] ('User-maintained programs'): 
 ```
 NAME               moo -- a game      
 SYNOPSIS           /usr/games/moo
