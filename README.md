@@ -23,3 +23,4 @@ I appeared that Moo is also known as ‘Bulls and Cows’, and is the forerunner
 
 E.g. if 5046 is the secret code, then a guess of 3456 is one bull (the 6) and two cows (the 4 and 5). The purpose of the game is to get ‘four bulls’ (code correctly guessed) in as few tries as possible.
 
+The first computer implementations of Bulls and Cows were the MOO program written in 1968 by Dr. Frank King for [TITAN](https://en.wikipedia.org/wiki/Titan_(1963_computer)), the Cambridge University Atlas&nbsp;2 computer. 
