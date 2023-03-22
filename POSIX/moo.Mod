@@ -126,17 +126,15 @@ MODULE moo;  (* hk  22-3-2023 *)
 				i := 0; 
 				WHILE i < N DO
 					Files.ReadString(r, tab[i].name);
-		(*		IF tab[i].name # "" THEN *)
-						Out.String(tab[i].name); 
-						FOR j := 1 TO nameLen - 1 - Strings.Length(tab[i].name) DO Out.Char(" ") END;
-						Files.ReadReal(r, tab[i].wAverage); WriteRealTo1Dec(tab[i].wAverage); Out.Char(" ");
-						Files.ReadReal(r, tab[i].average);  WriteRealTo1Dec(tab[i].average);
-						Files.ReadInt (r, tab[i].movesToDate); Out.Int(tab[i].movesToDate, 4);
-						Files.ReadInt (r, tab[i].gamesToDate); Out.Int(tab[i].gamesToDate, 4);
-						FOR j := 0 TO movesLen - 1 DO Files.ReadInt(r, tab[i].moves[j]) END;
-						FOR j := 1 TO movesLen - 1 DO          Out.Int(tab[i].moves[j], 3) END;
-						Out.Ln;
-		(*		END;                     *)
+					Out.String(tab[i].name); 
+					FOR j := 1 TO nameLen - 1 - Strings.Length(tab[i].name) DO Out.Char(" ") END;
+					Files.ReadReal(r, tab[i].wAverage); WriteRealTo1Dec(tab[i].wAverage); Out.Char(" ");
+					Files.ReadReal(r, tab[i].average);  WriteRealTo1Dec(tab[i].average);
+					Files.ReadInt (r, tab[i].movesToDate); Out.Int(tab[i].movesToDate, 4);
+					Files.ReadInt (r, tab[i].gamesToDate); Out.Int(tab[i].gamesToDate, 4);
+					FOR j := 0 TO movesLen - 1 DO Files.ReadInt(r, tab[i].moves[j]) END;
+					FOR j := 1 TO movesLen - 1 DO          Out.Int(tab[i].moves[j], 3) END;
+					Out.Ln;
 					INC(i)
 				END; Out.Ln
 			ELSE
