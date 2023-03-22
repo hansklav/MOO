@@ -29,5 +29,5 @@ Around 1970 it was ‘imported from England’ into the USA when J.S. Felton wro
 
 The game was introduced to a wider audience by <b><large>ℵ</large><sub>0</sub></b> (‘Aleph Null’) in the [Computer Recreations column](https://onlinelibrary.wiley.com/doi/10.1002/spe.4380010210) of the April-June 1971 issue of Software – Practice and Experience.
 
-The optimal playing strategy is discussed [here](https://web.archive.org/web/20120425120039/http://www.jfwaf.com/Bulls%20and%20Cows.pdf) and [here](http://slovesnov.users.sf.net/bullscows/bullscows.pdf).
+It has been shown that using an optimal strategy any Moo secret code can be found in at most seven guesses, and that the best average number of guesses is 5.21. The optimal playing strategy is discussed [here](https://web.archive.org/web/20120425120039/http://www.jfwaf.com/Bulls%20and%20Cows.pdf) and [here](http://slovesnov.users.sf.net/bullscows/bullscows.pdf).
 
