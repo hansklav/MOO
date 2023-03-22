@@ -101,7 +101,7 @@ MODULE moo;  (* hk  22-3-2023 *)
 		WriteLn("  -v       verbose output.");
 		WriteLn("  -i       display game instructions.");
 		WriteLn("  -l | -L  display the League Table.");
-		WriteLn("  -n Name  enter a Name for the League Table.");
+		WriteLn("  -n Name  enter your Name for the League Table.");
 	END Usage;
 	
 	PROCEDURE ShowLeagueTable;
