@@ -210,7 +210,7 @@ MODULE moo;  (* hk  22-3-2023 *)
 	BEGIN
 		continue := TRUE;  askGuess := TRUE;
 		WHILE askGuess DO
-			t := Input.Time();  (* to prevent infinite loop on ^D *)
+			t := Input.Time();  (* to prevent infinite loop on Ctrl+D *)
 			WriteLn("? ");  In.Line(guess);  
 			IF (Strings.Length(guess) = 4) & AllDigits(guess) THEN 
 				askGuess := FALSE
