@@ -1,0 +1,4 @@
+[*.{mod,Mod,obn}]
+end_of_line = cr      # does not seem to work, so I reverted to CR LF
+indent_style = tab
+indent_size = 2
