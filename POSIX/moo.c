@@ -25,7 +25,7 @@ char *argv[];
 			break;
 
 		case '?':
-			printf("usage: cmoo [-i]\n");
+			printf("usage: cmoo [-i]\n"); 
 			exit(2);
 		}
 
