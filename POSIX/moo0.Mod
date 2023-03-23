@@ -147,7 +147,7 @@ MODULE moo0;  (* hk  23-2-2023 *)
 				END
 			END;
 			Out.Int(nGuesses, 0); WriteLn(" guesses"); Out.Ln;
-		UNTIL FALSE
+		UNTIL FALSE 
 	END Main;
 	
 BEGIN	
