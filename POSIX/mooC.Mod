@@ -116,8 +116,8 @@ MODULE mooC;  (* hk  20-2-2023 *)
 						INC(i);
 						j := 0
 					ELSIF i = SIZE - 1 THEN
-							INC(i);
-							break := TRUE
+						INC(i);
+						break := TRUE
 					END
 		  	END
 			END; (* WHILE j *)
