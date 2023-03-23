@@ -1,9 +1,10 @@
-MODULE mooC;
+MODULE mooC;  (* hk  20-2-2023 *)
 (** 
  *  Oberon-07 implementation of the game of MOO (Bulls & Cows). Simple version without ladder.
  *  Tries to stay as close to the C-code of moo.c as possible.
  *  For the POSIX command-line. Compiled with OBNC (http://miasap.se/obnc/).
  *)
+ 
 	IMPORT Input, In, Out, Random, Strings, Args := extArgs;
 	
 	CONST SIZE = 4;  TEN = 10;  
