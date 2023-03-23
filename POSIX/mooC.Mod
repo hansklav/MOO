@@ -12,7 +12,6 @@ MODULE mooC;  (* hk  20-2-2023 *)
 	VAR nBulls, nCows, nAttempts, a: INTEGER;
 	  number: ARRAY SIZE OF CHAR;
 	  guess: ARRAY TEN OF CHAR;
-	  debug: BOOLEAN;
 	  
 	PROCEDURE HALT;  (* exit the program *)
 	BEGIN ASSERT(FALSE) 
@@ -156,7 +155,6 @@ MODULE mooC;  (* hk  20-2-2023 *)
 	END HandleOptions;
 	
 BEGIN	
-	debug := TRUE;
 	HandleOptions;
 	WriteLn("MOO");
 	REPEAT
