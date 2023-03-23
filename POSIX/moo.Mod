@@ -453,5 +453,3 @@ MODULE moo;  (* hk  22-3-2023 *)
 BEGIN
 	Main
 END moo.
-
-   
