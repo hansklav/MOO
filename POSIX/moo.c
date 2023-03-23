@@ -135,7 +135,7 @@ cmatch()   /*  matching of player's guess and actual number  */
 		}
 		if (i < SIZE) {
 			++i;
-			j = 0;
+			j = 0; 
 		}
 	}
 }
