@@ -1,4 +1,4 @@
-#MOO, MasterMind, Pico-Fermi-Bagels
+# MOO, MasterMind, Pico-Fermi-Bagels
 
 As a programming exercise for a simple command-line game I made these different versions of the game of Moo.
 
