@@ -23,7 +23,7 @@ I appeared that Moo is also known as ‘[Bulls and Cows](https://en.wikipedia.or
 
 E.g. if 5046 is the secret code, then a guess of 3456 is one bull (the 6) and two cows (the 4 and 5). The purpose of the game is to get ‘four bulls’ (code correctly guessed) in as few tries as possible. 
 
-A simpler version with a 3-digit code is known as [Pico Fermi Bagels](https://everything2.com/title/Pico+Fermi+Bagels) (Bagels, [Bagel Pico Fermi](https://www.messforless.net/what-is-the-bagel-pico-fermi-math-game/)).
+A simpler version with a 3-digit code is known as [Pico Fermi Bagels](https://everything2.com/title/Pico+Fermi+Bagels) ([Bagels](https://www.armoredpenguin.com/bagels/), [Bagel Pico Fermi](https://www.messforless.net/what-is-the-bagel-pico-fermi-math-game/)).
 
 The first computer implementation of Bulls and Cows was the MOO program written in 1968 in machine-code by Dr. Frank King for [TITAN](https://en.wikipedia.org/wiki/Titan_(1963_computer)), the Cambridge University Atlas&nbsp;2 computer; this program kept a league table showing the performance of its human opponents, which made it very popular in the Computer Laboratory.
 
