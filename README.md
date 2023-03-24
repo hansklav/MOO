@@ -16,7 +16,7 @@ OWNER              ken
 ```
 The programmer of this game, Ken Thompson, is also the author of the UNIX Operating System. He wrote several other games for UNIX version 1.0 (Blackjack, Chess, a 3D self-learning version of Tic-tac-toe), and they all have more extensive descriptions in the Manual. So I was intrigued by this game ‘moo’, which I had never heard of.
 
-I appeared that Moo is also known as ‘Bulls and Cows’, and is the forerunner of [Master Mind](https://en.wikipedia.org/wiki/Mastermind_(board_game)), which I *did* know. In a pencil-and-paper version the game has been played by schoolchildren in Britain for decades. The rules are simple:
+I appeared that Moo is also known as ‘[Bulls and Cows](https://en.wikipedia.org/wiki/Bulls_and_Cows)’, and is the forerunner of [Master Mind](https://en.wikipedia.org/wiki/Mastermind_(board_game)), which I *did* know. In a pencil-and-paper version the game has been played by schoolchildren in Britain for decades. The rules are simple:
 * Guess the 4-digit code, of which all digits must be distinct.
 * Bulls: the number of correct digits in the right place.
 * Cows:  the number of correct digits in the wrong place.
