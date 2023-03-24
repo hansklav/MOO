@@ -6,6 +6,6 @@ I started with MooMmPfB.Mod which not only plays [Moo (Bulls & Cows)](https://en
 Later I wanted to add a League Table and for this I made a simplified version that only plays classic UNIX MOO.
 
 If you like to study the code it's best to start with Moo0.Mod, which has the simplest source text.
-I wrote MooC.Mod after I had found the C source code (moo.c) to see what an Oberon version of that would look like.
+I wrote MooC.Mod after I had found the C&nbsp;source code (moo.c) to see what an Oberon version of that would look like.
 
-I find Moo0.Mod more readable and understandable than the C source code, also because Oberon can make use of the SET datatype.
+I find Moo0.Mod more readable and understandable than the C&nbsp;source code, also because Oberon can make use of the SET datatype.
