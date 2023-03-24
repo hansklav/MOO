@@ -19,6 +19,7 @@ MODULE mooMmPfb;  (* hk  2019 *)
 
 	For a discussion of the optimal playing stategy see:
 	https://web.archive.org/web/20120425120039/http://www.jfwaf.com/Bulls%20and%20Cows.pdf
+	https://www.armoredpenguin.com/bagels/
 
 
 	* Options *
