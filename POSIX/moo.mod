@@ -47,7 +47,7 @@ MODULE moo;  (* hk  9-4-2023 *)
   (* Utilities *)
 
   PROCEDURE HALT; 
-  BEGIN ASSERT(FALSE)                       (* exit the program *)
+  BEGIN ASSERT(FALSE)                    (* exit the program *)
   END HALT;
 	  
 	PROCEDURE WriteLn (s: ARRAY OF CHAR);
