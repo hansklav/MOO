@@ -453,7 +453,6 @@ MODULE moo;  (* hk  9-4-2023 *)
 				ELSE 
 					found := FALSE
 				END;
-				
 				WHILE nBulls < 4 DO
 					nBulls := 0;  nCows := 0;
 					continue := TakeGuess();
