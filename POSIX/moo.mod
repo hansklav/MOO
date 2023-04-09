@@ -1,8 +1,8 @@
-MODULE moo;  (* hk  22-3-2023 *)
+MODULE moo;  (* hk  9-4-2023 *)
 (*
-   `´                                                                  
+   `'                                                                  
 	 M  O  O --  The game of Moo (Bulls & Cows).
-	 /\  /´`\    Oberon-07 command-line version.
+	 /\  /'`\    Oberon-07 command-line version.
    
    For any POSIX compatible operating system (UNIX, Linux, macOS, Windows).
    Compiled with the OBNC compiler (http://miasap.se/obnc/).
@@ -11,10 +11,10 @@ MODULE moo;  (* hk  22-3-2023 *)
 	 but adds a ladder ('League table').
 *)
 
-	IMPORT Input, In, Out, Files, Random, Strings, Args := extArgs;
+	IMPORT In, Out, Files, Random, Strings, Args := extArgs;
 	
 	CONST
-		SIZE = 4;  TEN = 10;  nameLen = 10;  movesLen = 17;  tabLen = 32;
+		SIZE = 4;  TEN = 10;  nameLen = 10;  movesLen = 16;  tabLen = 32;
 		fileMark = 040506F00H;
 		fileName = "MooLeague.Table";
 
@@ -26,17 +26,18 @@ MODULE moo;  (* hk  22-3-2023 *)
 			wAverage, average: REAL;           (* weighted average, simple average *)
 			movesToDate, 
 			gamesToDate: INTEGER;
-			moves: ARRAY movesLen OF INTEGER   (* frequency of each number of moves (guesses) *)
+			moves: ARRAY movesLen OF INTEGER;  (* frequency of each number of moves (guesses) *)
+			pq: INTEGER                        (* premature quits *)
 		END;
 		
 	VAR
 	  nBulls, nCows, nGuesses: INTEGER;
 	  code: ARRAY SIZE OF CHAR;
 	  guess: ARRAY TEN OF CHAR;
-	  verbose, delete: BOOLEAN;            (* program options *)
-	  
+	  classic, delete: BOOLEAN;            (* program options *)
+
 		(* League Table *)
-		N: INTEGER;                          (* number of users in the League Table *)
+		nUsers: INTEGER;                     (* number of users in the League Table *)
 		tab: ARRAY tabLen OF Line;           (* array for the League Table *)
 		userName: Name;
 		f: Files.File;
@@ -46,38 +47,46 @@ MODULE moo;  (* hk  22-3-2023 *)
   (* Utilities *)
 
   PROCEDURE HALT; 
-  BEGIN ASSERT(FALSE)                    (* exit the program *)
+  BEGIN ASSERT(FALSE)                       (* exit the program *)
   END HALT;
-  
-  PROCEDURE CAP (ch: CHAR): CHAR;
-  (* Capitalizes ASCII lower-case letters while leaving 
-     capital letters and all other characters unchanged *)
-    VAR res: CHAR;
-  BEGIN
-    IF (60X < ch) & (ch < 7BX) THEN
-      res := CHR(ORD(ch) - (ORD("a") - ORD("A")))
-    END
-  RETURN res
-  END CAP;
 	  
 	PROCEDURE WriteLn (s: ARRAY OF CHAR);
 	BEGIN Out.String(s); Out.Ln
 	END WriteLn;
 	
-	PROCEDURE WriteRealTo1Dec (x: REAL);
-		VAR ix, d: INTEGER;
-	BEGIN ASSERT(x >= 0.0);
-		ix := FLOOR(x);                         (* integer part of x *)
-		d := FLOOR(10.0*(x + 0.05 - FLT(ix)));  (* rounded first decimal of x *)
-		IF ix < 10 THEN Out.Char(" ") END; 
-		Out.Int(ix, 0); Out.Char("."); Out.Int(d, 0 )
-	END WriteRealTo1Dec;	  
-
+	PROCEDURE WriteRealFix2 (x: REAL);
+	(* Write REAL x in fixed point notation with 2 decimals, last decimal rounded *)
+		VAR ix: INTEGER;
+	BEGIN ASSERT((1.0 <= x) & (x < 99.4));
+		ix := FLOOR(x * 100.0 + 0.501);
+		IF x < 10.0 THEN Out.Char(" ") END;
+		Out.Int(ix DIV 100, 0); Out.Char(".");
+		IF ix MOD 100 < 10 THEN Out.Char("0") END;
+		Out.Int(ix MOD 100, 0)
+	END WriteRealFix2;
+	
 
 	(* Options *)  
-	  
-	PROCEDURE Instruct;  (* set of instructions for the game *)
+	
+	PROCEDURE Usage;
 	BEGIN
+		WriteLn("moo - the game of MOO (or Bulls & Cows)");
+		WriteLn("usage: moo [-? | -h] [-i | -vi] [-l | -L | -vl | -vL] [ -c] [-n Name]");
+		WriteLn("  -? | -h  display this message."); 
+		WriteLn("  -i       display game instructions.");
+		WriteLn("  -c       classic 1st Edition UNIX output.");
+		WriteLn("  -l | -L  display the League Table.");
+		WriteLn("  -n Name  enter your Name for the League Table.");
+	END Usage;
+	
+	PROCEDURE Instruct;
+	BEGIN
+		IF ~ classic THEN
+			Out.Ln;
+			WriteLn("MOO v. 1.0.4                 `'         ");
+			WriteLn("BY                           M  O  O –– ");
+			WriteLn("HANS KLAVER, 2023           / \  /'`\   ");
+    END;
 		Out.Ln;
 		WriteLn("The rules of MOO, or 'Bulls & Cows':");
 		WriteLn("Dealer picks a code of four different decimal digits, e.g. 6182,");
@@ -87,54 +96,47 @@ MODULE moo;  (* hk  22-3-2023 *)
 		WriteLn("  Cows:  number of correct digits in the wrong place (viz. 2)");
 		WriteLn("4 bulls indicates that player correctly guessed the code.");
 		WriteLn("The number of guesses is given at the end of each game.");
-		WriteLn("To give up and reveal the code type ? and enter.");
-		WriteLn("When a game is finished, another one begins immediately.");
-		WriteLn("If you do not wish to continue playing, type q and enter");
-		WriteLn("To join the League start the game with ./moo -n YourName");
-		WriteLn("Your personal performance data will then be shown in the League Table.");
+		WriteLn("When a game is finished, another one begins immediately; if you");
+		WriteLn("do not wish to continue playing, type q and press the enter/return key.");
+		WriteLn("To join the League start the game with  ./moo -n YourName (max. 9 chars)");
+		WriteLn("your personal performance data will then be shown in the League Table.");
+		Out.Ln;
+		WriteLn("Entering ? instead of a guess will reveal the code and stop the game");
+		WriteLn("(only available if you play anonymously).");
+		Out.Ln;
+		WriteLn("To review these Instructions start with  ./moo -i ");
 		Out.Ln;
 		WriteLn("Have fun!");
-		Out.Ln	
+		Out.Ln
 	END Instruct;
-	
-	PROCEDURE Usage;
-	BEGIN
-		WriteLn("Usage: moo [-? | -h] [-v] [-i | -vi] [-l | -L | -vl | -vL] [-n Name]");
-		WriteLn("  -? | -h  display this message.");
-		WriteLn("  -v       verbose output.");
-		WriteLn("  -i       display game instructions.");
-		WriteLn("  -l | -L  display the League Table.");
-		WriteLn("  -n Name  enter your Name for the League Table.");
-	END Usage;
 	
 	PROCEDURE ShowLeagueTable;
 		VAR i, j, m: INTEGER;
 	BEGIN
 		f := Files.Old(fileName);
 		IF f # NIL THEN  (* League Table file exists *)
-			IF verbose THEN
-				WriteLn("                             `´        ");                                                                 
-				WriteLn("L e a g u e  T a b l e  for  M  O  O --");
-				WriteLn("                             /\  /´`\  ");
-			END;
-			WriteLn("Name     wAvg  Avg mov gam  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16+");
+			Out.Ln;
+			WriteLn("L e a g u e  T a b l e");
+			Out.Ln;
+			WriteLn("Name       wAvg   Avg mov gam  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15+");
 			WriteLn("---------------------------------------------------------------------------");
 			Files.Set(r, f, 0);
 			Files.ReadInt(r, m);	
 			IF m = fileMark THEN
-				Files.ReadInt(r, N); 
+				Files.ReadInt(r, nUsers); 
 				i := 0; 
-				WHILE i < N DO
+				WHILE i < nUsers DO
 					Files.ReadString(r, tab[i].name);
-					Out.String(tab[i].name); 
-					FOR j := 1 TO nameLen - 1 - Strings.Length(tab[i].name) DO Out.Char(" ") END;
-					Files.ReadReal(r, tab[i].wAverage); WriteRealTo1Dec(tab[i].wAverage); Out.Char(" ");
-					Files.ReadReal(r, tab[i].average);  WriteRealTo1Dec(tab[i].average);
-					Files.ReadInt (r, tab[i].movesToDate); Out.Int(tab[i].movesToDate, 4);
-					Files.ReadInt (r, tab[i].gamesToDate); Out.Int(tab[i].gamesToDate, 4);
-					FOR j := 0 TO movesLen - 1 DO Files.ReadInt(r, tab[i].moves[j]) END;
-					FOR j := 1 TO movesLen - 1 DO          Out.Int(tab[i].moves[j], 3) END;
-					Out.Ln;
+						Out.String(tab[i].name); 
+						FOR j := 1 TO nameLen - Strings.Length(tab[i].name) DO Out.Char(" ") END;
+						Files.ReadReal(r, tab[i].wAverage); WriteRealFix2(tab[i].wAverage); Out.Char(" ");
+						Files.ReadReal(r, tab[i].average);  WriteRealFix2(tab[i].average);
+						Files.ReadInt (r, tab[i].movesToDate); Out.Int(tab[i].movesToDate, 4);
+						Files.ReadInt (r, tab[i].gamesToDate); Out.Int(tab[i].gamesToDate, 4);
+						FOR j := 0 TO movesLen - 1 DO Files.ReadInt(r, tab[i].moves[j]) END;
+						FOR j := 1 TO movesLen - 1 DO          Out.Int(tab[i].moves[j], 3) END;
+						Files.ReadInt (r, tab[i].pq); Out.String("  ("); Out.Int(tab[i].pq, 0); Out.Char(")");
+						Out.Ln;
 					INC(i)
 				END; Out.Ln
 			ELSE
@@ -144,34 +146,36 @@ MODULE moo;  (* hk  22-3-2023 *)
 			Out.String("League Table file does not exist."); Out.Ln
   	END
 	END ShowLeagueTable;
-	
+
 	PROCEDURE HandleOptions;
-		VAR i, (* j, *) k, res: INTEGER;
-			arg: ARRAY nameLen OF CHAR;
+		VAR i, k, res: INTEGER;
+			arg, arg1: ARRAY nameLen OF CHAR;
 	BEGIN
 		FOR i := 0 TO Args.count - 1 DO
 			Args.Get(i, arg, res);
 			IF arg[0] = "-" THEN
-				IF (arg = "-n") OR (arg = "-d") THEN
-					IF arg[1] = "d" THEN delete := TRUE END;
-					IF i < Args.count - 1 THEN INC(i); Args.Get(i, arg, res) END;
-					userName := "";  Strings.Insert(arg, 0, userName)
-				ELSE (* arg # -n & arg # -d *)
-					k := 1;
-					WHILE arg[k] # 0X DO
-						IF     arg[k] = "v" THEN verbose := TRUE
-						ELSIF  arg[k] = "i" THEN Instruct
-						ELSIF (arg[k] = "?") OR (arg[k] = "h") THEN Usage; HALT
-						ELSIF (arg[k] = "l") OR (arg[k] = "L") THEN ShowLeagueTable; HALT
-						ELSE WriteLn("illegal option -- "); Out.Char(arg[k]); Out.Ln; Usage; HALT
-						END;
-						INC(k)
-					END (* WHILE *)
-				END (* IF arg = "-n" *)
+				k := 1;
+				WHILE arg[k] # 0X DO
+					IF (arg[k] = "n") OR (arg[k] = "d") THEN
+						IF arg[1] = "d" THEN delete := TRUE END;
+						IF i < Args.count - 1 THEN
+							Args.Get(i+1, arg1, res);
+							IF (arg1[0] # "-") & (arg1[1] # "-") THEN
+								userName := "";  Strings.Insert(arg1, 0, userName)
+							END
+						END
+					ELSIF (arg[k] = "?") OR (arg[k] = "h") THEN Usage; HALT
+					ELSIF  arg[k] = "c"                    THEN classic := TRUE
+					ELSIF  arg[k] = "i"                    THEN Instruct
+					ELSIF (arg[k] = "l") OR (arg[k] = "L") THEN ShowLeagueTable; HALT
+					ELSE Out.String("illegal option: -"); Out.Char(arg[k]); Out.Ln; Usage; HALT
+					END;
+					INC(k)
+				END (* WHILE *)
 			END (* IF arg[0] = "-" *)
 		END (* FOR *)
 	END HandleOptions;
-	
+
 	
   (* Generate number consisting of SIZE random digits *)
   
@@ -196,7 +200,7 @@ MODULE moo;  (* hk  22-3-2023 *)
 	PROCEDURE TakeGuess(): BOOLEAN;
 	(* Initializes the global variable 'guess'. 
 	   The Boolean result reports the player's wish to continue the game or not. *)
-		VAR continue: BOOLEAN;  askGuess: BOOLEAN;  i, t: INTEGER;
+		VAR continue: BOOLEAN;  askGuess: BOOLEAN;  i: INTEGER;
 		
 		PROCEDURE AllDigits (s: ARRAY OF CHAR): BOOLEAN;
 			VAR i: INTEGER; res: BOOLEAN;
@@ -210,18 +214,24 @@ MODULE moo;  (* hk  22-3-2023 *)
 	BEGIN
 		continue := TRUE;  askGuess := TRUE;
 		WHILE askGuess DO
-			t := Input.Time();  (* to prevent infinite loop on Ctrl+D *)
-			WriteLn("? ");  In.Line(guess);  
-			IF (Strings.Length(guess) = 4) & AllDigits(guess) THEN 
-				askGuess := FALSE
-			ELSIF ((CAP(guess[0]) = "Q") & (guess[1] = 0X)) OR (Input.Time() - t < 100) THEN
-				askGuess := FALSE;  continue := FALSE
-			ELSIF (guess[0] = "?") & (guess[1] = 0X) THEN
-				Out.String("The code was ");
-				FOR i := 0 TO SIZE - 1 DO Out.Char(code[i]) END; Out.Ln;
-				askGuess := FALSE;  continue := FALSE
-			ELSE
-				WriteLn("bad guess")
+			FOR i := 0 TO TEN - 1 DO guess[i] := 0X END;
+			Out.String("? ");  In.Line(guess);  
+			IF In.Done THEN 
+				IF (Strings.Length(guess) = 4) & AllDigits(guess) THEN 
+					askGuess := FALSE
+				ELSIF ((guess[0] = "q") OR (guess[0] = "Q")) & (guess[1] = 0X) THEN
+					askGuess := FALSE;  continue := FALSE
+				ELSIF (guess[0] = "?") & (guess[1] = 0X) & (userName = "") THEN
+					IF ~ classic THEN
+						Out.String("The code was ");
+						FOR i := 0 TO SIZE - 1 DO Out.Char(code[i]) END; Out.Ln;
+						HALT
+					END
+				ELSE
+					WriteLn("bad guess")
+				END
+			ELSE  (* ~ In.Done *)
+				Out.Ln; HALT  (* i.a. prevents infinite loop on ^D *)
 			END
 		END
 	RETURN continue 
@@ -252,11 +262,12 @@ MODULE moo;  (* hk  22-3-2023 *)
 		VAR i: INTEGER;
 	BEGIN
 		tab[n].name := "";
+		tab[n].wAverage := 100.0;
+		tab[n].average := 100.0;
 		tab[n].movesToDate := 0;
 		tab[n].gamesToDate := 0;
 		FOR i := 0 TO movesLen - 1 DO tab[n].moves[i] := 0 END;
-		tab[n].wAverage := 100.0;
-		tab[n].average := 100.0
+		tab[n].pq := 0;
 	END InitTabLine;			
 	
 
@@ -267,7 +278,7 @@ MODULE moo;  (* hk  22-3-2023 *)
 	BEGIN
 		Files.Set(r, f, 0);
 		Files.WriteInt(r, fileMark);  (* write a magic number used as a file type signature *)
-		Files.WriteInt(r, N);         (* number of players in the League Table *)
+		Files.WriteInt(r, nUsers );   (* number of players in the League Table *)
 		FOR i := 0 TO tabLen - 1 DO
 			Files.WriteString(r, tab[i].name);
 			Files.WriteReal  (r, tab[i].wAverage);
@@ -275,11 +286,11 @@ MODULE moo;  (* hk  22-3-2023 *)
 			Files.WriteInt   (r, tab[i].movesToDate);
 			Files.WriteInt   (r, tab[i].gamesToDate);
 			FOR j := 0 TO movesLen - 1 DO Files.WriteInt(r, tab[i].moves[j]) END;
+			Files.WriteInt   (r, tab[i].pq);
 		END;
 		IF register THEN
 			Files.Register(f);  
-			Files.Close(f);     (* should not be necessary *)
-			Out.String("New file registered."); Out.Ln 
+			Files.Close(f)  (* should have been done by Files.Register, but *is* necessary for OBNC *) 
 		ELSE
 			Files.Close(f)
 		END
@@ -294,22 +305,22 @@ MODULE moo;  (* hk  22-3-2023 *)
 		PROCEDURE ClearTable;
 			VAR i: INTEGER;
 		BEGIN
-			N := 0;
+			nUsers := 0;
 			FOR i := 0 TO tabLen - 1 DO InitTabLine(i) END
 		END ClearTable;			
 
 	BEGIN
 		f := Files.Old(fileName);
 		IF f = NIL THEN
-			Out.String("New file for League Table created."); Out.Ln;
+			IF ~ classic THEN Instruct END;
 			f := Files.New(fileName);
 			ClearTable;
-			SaveTable(TRUE)  (* save and register a new empty file *)
+			SaveTable(TRUE)     (* save and register a new empty file *)
 		ELSE
 			Files.Set(r, f, 0);
 			Files.ReadInt(r, m);
 			IF m = fileMark THEN
-				Files.ReadInt(r, N);
+				Files.ReadInt(r, nUsers );
 				FOR i := 0 TO tabLen - 1 DO
 					Files.ReadString(r, tab[i].name);
 					Files.ReadReal  (r, tab[i].wAverage);
@@ -317,7 +328,9 @@ MODULE moo;  (* hk  22-3-2023 *)
 					Files.ReadInt   (r, tab[i].movesToDate);
 					Files.ReadInt   (r, tab[i].gamesToDate);
 					FOR j := 0 TO movesLen - 1 DO Files.ReadInt(r, tab[i].moves[j]) END;
-				END;
+					Files.ReadInt   (r, tab[i].pq);
+
+				END
 			ELSE  (* no FileMark found, so file corrupted (?) *)
 				Out.String("League Table corrupted; saving a new empty file."); Out.Ln;
 				ClearTable;
@@ -349,7 +362,7 @@ MODULE moo;  (* hk  22-3-2023 *)
 		IF (i # tabLen) & (tab[i].name = userName) THEN  (* name found *)
 			InitTabLine(i);
 			SortTable;
-			DEC(N);
+			DEC(nUsers );
 			Out.String(userName); Out.String(" deleted from the League."); Out.Ln
 		END
 	END DeletePlayer;
@@ -370,7 +383,7 @@ MODULE moo;  (* hk  22-3-2023 *)
 					INC(tab[n].moves[movesLen - 1]) 
 				ELSE 
 					INC(tab[n].moves[nGuesses]) 
-				END
+				END;
 			END UpdateLine;
 			
 		BEGIN
@@ -379,10 +392,11 @@ MODULE moo;  (* hk  22-3-2023 *)
 			IF (i # tabLen) & (tab[i].name = userName) THEN  (* name found *)
 			  UpdateLine(i)
 			ELSE                                             (* name not found *)
-				IF N < tabLen THEN  (* enough room in the table array *)
-				(* Add current player in line N *)
-					tab[N].name := userName;  UpdateLine(N);  
-					INC(N)             
+				IF nUsers < tabLen THEN  (* enough room in the table array *)
+					(* Add current player in line nUsers *)
+					InitTabLine(nUsers);
+					tab[nUsers].name := userName;  UpdateLine(nUsers);  
+					INC(nUsers)             
 				ELSE
 					WriteLn("League table full")  (* Todo: make tabLen larger & recompile *)
 				END
@@ -398,18 +412,24 @@ MODULE moo;  (* hk  22-3-2023 *)
 	
 	PROCEDURE PrintOut;
 	BEGIN
-		Out.Int(nBulls, 4 - SIZE);
-		IF nBulls = 1 THEN Out.String(" bull,  ") ELSE Out.String(" bulls, ") END;
-		Out.Int(nCows, 0);
-		IF nCows = 1 THEN Out.String(" cow") ELSE Out.String(" cows") END; Out.Ln 
+		IF classic THEN
+			Out.Int(nBulls, 4 - SIZE); Out.String(" bulls; ");
+			Out.Int(nCows, 0);         Out.String(" cows") 
+		ELSE
+			Out.Int(nBulls, 4 - SIZE);
+			IF nBulls = 1 THEN Out.String(" bull;  ") ELSE Out.String(" bulls; ") END;
+			Out.Int(nCows, 0);
+			IF nCows = 1 THEN Out.String(" cow") ELSE Out.String(" cows") END
+		END; Out.Ln
 	END PrintOut;
 
   
 	PROCEDURE Main;
-		VAR continue: BOOLEAN;
+		VAR continue, ended, found: BOOLEAN;
+			n: INTEGER;
 	BEGIN
-		N := 0;
-		userName := "";  verbose := FALSE;  delete := FALSE;
+		nUsers := 0;  userName := "";  ended := FALSE;
+		classic := FALSE;  delete := FALSE;
 		HandleOptions;
 		LoadTable;
 		IF delete THEN 
@@ -422,34 +442,58 @@ MODULE moo;  (* hk  22-3-2023 *)
 				IF userName = "" THEN 
 					Out.String("new game")
 				ELSE
-					Out.String("new game for "); Out.String(userName) 
+					Out.String("new game for "); Out.String(userName);
 				END; Out.Ln;
 				nBulls := 0;  nCows := 0;  nGuesses := 0;
 				NumGen;
+				n := 0;  WHILE (n < tabLen) & (tab[n].name # userName) DO INC(n) END;
+				IF (n # tabLen) & (tab[n].name = userName) THEN
+					found := TRUE;  INC(tab[n].pq);
+					SaveTable(FALSE)
+				ELSE 
+					found := FALSE
+				END;
+				
 				WHILE nBulls < 4 DO
 					nBulls := 0;  nCows := 0;
 					continue := TakeGuess();
 					IF continue THEN
+						ended := FALSE;
 						INC(nGuesses);
 						Match;
 						PrintOut
 					ELSE
-						ShowLeagueTable; 
-						HALT
+						IF ~ ended THEN  (* attempted premature quit *)
+							IF classic THEN
+								WriteLn("bad guess")
+							ELSE
+								WriteLn("It is antisocial to try and quit in the middle of a game.");
+    						WriteLn("Please continue.")
+    					END
+						ELSE
+							IF found THEN DEC(tab[n].pq); SaveTable(FALSE) END;
+							ShowLeagueTable; 
+							HALT
+           	END
 					END
+				END; (* WHILE *)
+				ended := TRUE;
+				IF found THEN 
+					DEC(tab[n].pq); SaveTable(FALSE);
 				END;
-				IF verbose THEN
-					WriteLn("`´        ");                                                                 
+				IF ~ classic THEN
+					WriteLn("`'        ");                                                                 
 					WriteLn("M  O  O --");
-					WriteLn("/\  /´`\  ")
+					WriteLn("/\  /'`\  ")
 				END;
 				Out.Int(nGuesses, 0); 
 				IF nGuesses = 1 THEN WriteLn(" guess") ELSE WriteLn(" guesses") END; Out.Ln;
 				IF userName # "" THEN UpdateLeagueTable END
 			UNTIL FALSE
-		END
+		END (* IF delete *)
 	END Main;
 	
 BEGIN
 	Main
 END moo.
+
