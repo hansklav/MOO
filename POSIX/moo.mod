@@ -286,7 +286,7 @@ MODULE moo;  (* hk  9-4-2023 *)
 			Files.WriteInt   (r, tab[i].movesToDate);
 			Files.WriteInt   (r, tab[i].gamesToDate);
 			FOR j := 0 TO movesLen - 1 DO Files.WriteInt(r, tab[i].moves[j]) END;
-			Files.WriteInt   (r, tab[i].pq);
+			Files.WriteInt   (r, tab[i].pq)
 		END;
 		IF register THEN
 			Files.Register(f);  
@@ -328,8 +328,7 @@ MODULE moo;  (* hk  9-4-2023 *)
 					Files.ReadInt   (r, tab[i].movesToDate);
 					Files.ReadInt   (r, tab[i].gamesToDate);
 					FOR j := 0 TO movesLen - 1 DO Files.ReadInt(r, tab[i].moves[j]) END;
-					Files.ReadInt   (r, tab[i].pq);
-
+					Files.ReadInt   (r, tab[i].pq)
 				END
 			ELSE  (* no FileMark found, so file corrupted (?) *)
 				Out.String("League Table corrupted; saving a new empty file."); Out.Ln;
