@@ -1,4 +1,4 @@
-MODULE moo;  (* hk  9-4-2023 *)
+MODULE moo;  (* hk  17-4-2023 *)
 (*
    `'                                                                  
 	 M  O  O --  The game of Moo (Bulls & Cows).
@@ -17,6 +17,7 @@ MODULE moo;  (* hk  9-4-2023 *)
 		SIZE = 4;  TEN = 10;  nameLen = 10;  movesLen = 16;  tabLen = 32;
 		fileMark = 040506F00H;
 		fileName = "MooLeague.Table";
+		version  = "MOO 1.0.5";
 
 	TYPE
 		Name = ARRAY nameLen OF CHAR;
@@ -71,19 +72,21 @@ MODULE moo;  (* hk  9-4-2023 *)
 	PROCEDURE Usage;
 	BEGIN
 		WriteLn("moo - the game of MOO (or Bulls & Cows)");
-		WriteLn("usage: moo [-? | -h] [-i | -vi] [-l | -L | -vl | -vL] [ -c] [-n Name]");
-		WriteLn("  -? | -h  display this message."); 
-		WriteLn("  -i       display game instructions.");
+		WriteLn("usage: moo [-? | -h] [-i] [-c] [-n Name] [-l | -L] [-v]");
+		WriteLn("  -? | -h  display this message and exit.");
+		WriteLn("  -i       display game instructions and exit.");
 		WriteLn("  -c       classic 1st Edition UNIX output.");
-		WriteLn("  -l | -L  display the League Table.");
-		WriteLn("  -n Name  enter your Name for the League Table.");
+		WriteLn("  -n Name  enter your Name for the League Table and start a new game.");
+		WriteLn("  -l | -L  display the League Table and exit.");
+		WriteLn("  -v       display version number and exit.")
 	END Usage;
 	
 	PROCEDURE Instruct;
 	BEGIN
 		IF ~ classic THEN
 			Out.Ln;
-			WriteLn("MOO v. 1.0.4                 `'         ");
+			Out.String(version);
+			WriteLn(         "                    `'         ");
 			WriteLn("BY                           M  O  O –– ");
 			WriteLn("HANS KLAVER, 2023           / \  /'`\   ");
     END;
@@ -96,15 +99,14 @@ MODULE moo;  (* hk  9-4-2023 *)
 		WriteLn("  Cows:  number of correct digits in the wrong place (viz. 2)");
 		WriteLn("4 bulls indicates that player correctly guessed the code.");
 		WriteLn("The number of guesses is given at the end of each game.");
-		WriteLn("When a game is finished, another one begins immediately; if you");
+		Out.Ln;
+		WriteLn("When a game is finished, another one begins immediately; if you then");
 		WriteLn("do not wish to continue playing, type q and press the enter/return key.");
-		WriteLn("To join the League start the game with  ./moo -n YourName (max. 9 chars)");
-		WriteLn("your personal performance data will then be shown in the League Table.");
-		Out.Ln;
+		WriteLn("To join the League start the game with ./moo -n YourName (max. 9 chars),");
+		WriteLn("then your personal performance data will be shown in the League Table.");
 		WriteLn("Entering ? instead of a guess will reveal the code and stop the game");
-		WriteLn("(only available if you play anonymously).");
-		Out.Ln;
-		WriteLn("To review these Instructions start with  ./moo -i ");
+		WriteLn("(this is only possible if you play anonymously).");
+		WriteLn("To review these Instructions start with ./moo -i ");
 		Out.Ln;
 		WriteLn("Have fun!");
 		Out.Ln
@@ -166,8 +168,9 @@ MODULE moo;  (* hk  9-4-2023 *)
 						END
 					ELSIF (arg[k] = "?") OR (arg[k] = "h") THEN Usage; HALT
 					ELSIF  arg[k] = "c"                    THEN classic := TRUE
-					ELSIF  arg[k] = "i"                    THEN Instruct
+					ELSIF  arg[k] = "i"                    THEN Instruct; HALT
 					ELSIF (arg[k] = "l") OR (arg[k] = "L") THEN ShowLeagueTable; HALT
+					ELSIF  arg[k] = "v"                    THEN WriteLn(version); HALT
 					ELSE Out.String("illegal option: -"); Out.Char(arg[k]); Out.Ln; Usage; HALT
 					END;
 					INC(k)
@@ -286,7 +289,7 @@ MODULE moo;  (* hk  9-4-2023 *)
 			Files.WriteInt   (r, tab[i].movesToDate);
 			Files.WriteInt   (r, tab[i].gamesToDate);
 			FOR j := 0 TO movesLen - 1 DO Files.WriteInt(r, tab[i].moves[j]) END;
-			Files.WriteInt   (r, tab[i].pq)
+			Files.WriteInt   (r, tab[i].pq);
 		END;
 		IF register THEN
 			Files.Register(f);  
@@ -452,6 +455,7 @@ MODULE moo;  (* hk  9-4-2023 *)
 				ELSE 
 					found := FALSE
 				END;
+				
 				WHILE nBulls < 4 DO
 					nBulls := 0;  nCows := 0;
 					continue := TakeGuess();
