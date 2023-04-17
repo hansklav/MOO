@@ -87,7 +87,7 @@ MODULE moo;  (* hk  17-4-2023 *)
 			Out.Ln;
 			Out.String(version);
 			WriteLn(         "                    `'         ");
-			WriteLn("BY                           M  O  O –– ");
+			WriteLn("BY                           M  O  O -- ");
 			WriteLn("HANS KLAVER, 2023           / \  /'`\   ");
     END;
 		Out.Ln;
