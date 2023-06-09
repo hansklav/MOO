@@ -1,4 +1,4 @@
-MODULE moo;  (* hk  17-4-2023 *)
+MODULE moo;  (* hk  27-4-2023 *)
 (*
    `'                                                                  
 	 M  O  O --  The game of Moo (Bulls & Cows).
@@ -87,7 +87,7 @@ MODULE moo;  (* hk  17-4-2023 *)
 			Out.Ln;
 			Out.String(version);
 			WriteLn(         "                    `'         ");
-			WriteLn("BY                           M  O  O -- ");
+			WriteLn("BY                           M  O  O –– ");
 			WriteLn("HANS KLAVER, 2023           / \  /'`\   ");
     END;
 		Out.Ln;
@@ -397,7 +397,8 @@ MODULE moo;  (* hk  17-4-2023 *)
 				IF nUsers < tabLen THEN  (* enough room in the table array *)
 					(* Add current player in line nUsers *)
 					InitTabLine(nUsers);
-					tab[nUsers].name := userName;  UpdateLine(nUsers);  
+					tab[nUsers].name := userName;
+					UpdateLine(nUsers);  
 					INC(nUsers)             
 				ELSE
 					WriteLn("League table full")  (* Todo: make tabLen larger & recompile *)
