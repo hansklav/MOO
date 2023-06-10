@@ -35,6 +35,7 @@ MODULE moo;  (* hk  27-4-2023 *)
 	  nBulls, nCows, nGuesses: INTEGER;
 	  code: ARRAY SIZE OF CHAR;
 	  guess: ARRAY TEN OF CHAR;
+
 	  classic, delete: BOOLEAN;            (* program options *)
 
 		(* League Table *)
