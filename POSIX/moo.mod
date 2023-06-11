@@ -189,7 +189,7 @@ MODULE moo;  (* hk  27-4-2023 *)
 	BEGIN
 		i := 0;  numSet := {};
 		REPEAT
-			n := Random.Int(9);     (* generate a random integer in the range 0..9 *)
+			n := Random.Int(9);     (* generate a random integer in the range [0..9] *)
 			IF ~(n IN numSet) THEN  (* unique digit found *)
 				code[i] := CHR(n + ORD("0"));
 				INCL(numSet, n);
