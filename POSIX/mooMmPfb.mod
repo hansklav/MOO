@@ -19,7 +19,6 @@ MODULE mooMmPfb;  (* hk  2019 *)
 
 	For a discussion of the optimal playing stategy see:
 	https://web.archive.org/web/20120425120039/http://www.jfwaf.com/Bulls%20and%20Cows.pdf
-	https://www.armoredpenguin.com/bagels/
 
 
 	* Options *
@@ -51,7 +50,8 @@ MODULE mooMmPfb;  (* hk  2019 *)
 	permitted. In this mode a Cow is 'Pico', a Bull is 'Fermi', and neither Bull
 	nor Cow is 'Bagels'.
 	Pico Fermi Bagels originates from the Lawrence Hall of Science in Berkeley in
-	the early '70s. See: https://communicrossings.com/html/js/pfb.htm
+	the early '70s. See: https://www.armoredpenguin.com/bagels/ and
+  https://communicrossings.com/html/js/pfb.htm
 *)
 
 	IMPORT In, Out, Random, Args := extArgs;
