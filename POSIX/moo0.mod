@@ -40,7 +40,7 @@ MODULE moo0;  (* hk  23-2-2023 *)
 	BEGIN
 		i := 0;  numSet := {};
 		REPEAT
-			n := Random.Int(9);     (* range 0..9 *)
+			n := Random.Int(0, 9);
 			IF ~(n IN numSet) THEN  (* unique digit found *)
 				code[i] := CHR(n + ORD("0"));
 				INCL(numSet, n);
