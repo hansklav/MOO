@@ -298,7 +298,7 @@ MODULE mooMmPfb;  (* hk  2019 *)
 		i := 0;  theSet := {};
 		IF masterMind THEN max := 5 ELSE max := 9 END;
 		REPEAT
-			n := Random.Int(max);
+			n := Random.Int(0, max);
 			IF masterMind THEN n := n + 1 END;  (* 0..5 -> 1..6 *)
 			IF ~rep THEN  (* only unique numbers allowed *)
 				IF ~(n IN theSet) THEN  (* found another unique number *)
