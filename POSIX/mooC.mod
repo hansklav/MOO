@@ -45,7 +45,7 @@ MODULE mooC;  (* hk  20-2-2023 *)
 		i := 0;
 		WHILE i < SIZE DO
 			mark := 0;
-			number[i] := CHR(ORD("0") + Random.Int(9));
+			number[i] := CHR(ORD("0") + Random.Int(0, 9));
 			j := i - 1;  break := FALSE;
 			WHILE (j >= 0) & ~break DO
 				IF number[i] = number[j] THEN 
