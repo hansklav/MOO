@@ -5,7 +5,7 @@ MODULE moo;  (* hk  27-4-2023 *)
 	 /\  /'`\    Oberon-07 command-line version.
    
    For any POSIX compatible operating system (UNIX, Linux, macOS, Windows).
-   Compiled with the OBNC compiler (http://miasap.se/obnc/).
+   Compiled with OBNC (http://miasap.se/obnc/).
 	 
 	 Mimics the user interface of UNIX 1st Ed. MOO (1971), 
 	 but adds a ladder ('League table').
