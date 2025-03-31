@@ -2,7 +2,12 @@ MODULE mooMmPfb;  (* hk  2019 *)
 
 (* `´                                                                  
 	 M  O  O --  The game of Moo (Bulls & Cows, Master Mind, Pico Fermi Bagels).
-	 /\  /´`\    Command-line version.                                              
+	 /\  /´`\    Command-line version.
+
+  Oberon-07 version.
+  
+  For any POSIX compatible operating system (UNIX, Linux, macOS, Windows).
+  Compiled with OBNC (http://miasap.se/obnc/).
 
 	The first computer implementations of Bulls and Cows were the MOO program
 	written in 1968 by Dr. Frank King for TITAN, the Cambridge University ATLAS;
